@@ -14,6 +14,11 @@ const DashBoardSchema=new mongoose.Schema({
         required:true
 
     },
+    QuantityType:{
+        type:String,
+        required:true
+    },
+
     PriceQuantity:{
         type:Number,
         required:true

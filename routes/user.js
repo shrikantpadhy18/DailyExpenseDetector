@@ -65,12 +65,13 @@ router.post('/register',(req,res)=>{
 router.post('/dashboare',(req,res)=>{
     //const{email,productname,quantity,price}=req.body;
     console.log(req.body);
-    const{email,ProductName,Quantity,PriceQuantity}=req.body;
+    const{email,ProductName,Quantity,QuantityType,PriceQuantity}=req.body;
     console.log(email,ProductName,Quantity,PriceQuantity);
     const Dashb=new Dab({
         email,
         ProductName,
         Quantity,
+        QuantityType,
         PriceQuantity
     });
     user={
