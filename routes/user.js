@@ -115,7 +115,7 @@ router.post('/Status',(req,res)=>{
     
     //})
     let arg=[]
-    Dab.find({Month:searchinp}).then(arr=>{
+    Dab.find({Month:searchinp,email:ssn.email}).then(arr=>{
         
         arg=arr;
         console.log(arg);
