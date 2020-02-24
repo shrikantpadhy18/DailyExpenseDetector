@@ -1,7 +1,7 @@
 const express=require("express");
 const router=express();
 
-
+var ssn ;
 //User model
 const User=require('../Models/User');
 const Dab=require('../Models/Dash');
@@ -10,7 +10,7 @@ const bcrypt=require('bcryptjs')
 router.get('/login',(req,res)=>res.render("login"));
 //login
 router.get('/register',(req,res)=>res.render("register"));
-var ssn ;
+
 //handling request
 router.post('/register',(req,res)=>{
     const{name,email,password,password2}=req.body;
@@ -65,7 +65,9 @@ router.post('/register',(req,res)=>{
 router.post('/dashboare',(req,res)=>{
     //const{email,productname,quantity,price}=req.body;
     console.log(req.body);
-    const{email,ProductName,Quantity,QuantityType,PriceQuantity}=req.body;
+    var{email,ProductName,Quantity,QuantityType,PriceQuantity}=req.body;
+    ProductName=ProductName.toString();
+    ProductName=ProductName.toUpperCase();
     console.log(email,ProductName,Quantity,PriceQuantity);
     const Dashb=new Dab({
         email,
@@ -79,8 +81,23 @@ router.post('/dashboare',(req,res)=>{
     }
     user.email=email;
     console.log(Dashb);
-    Dashb.save().then(ser=>console.log("Data Inserted")).catch(err=>console.log(err))
-    res.render('dashboard',{user:user});
+    Dab.find({ProductName:ProductName,Month:new Date().getMonth()+1}).then(
+        prod=>{
+            if(prod){
+                console.log("update");
+                
+                
+                Dab.update({ProductName:ProductName,Month:new Date().getMonth()+1},{$inc:{PriceQuantity:PriceQuantity,Quantity:Quantity,date:Date.now()}})
+                console.log(Dab.find({ProductName:ProductName}));
+
+            }
+            else{
+                Dashb.save().then(ser=>console.log("Data Inserted")).catch(err=>console.log(err))
+            }
+        }
+    ).catch(err=>console.log(err));
+   
+    res.render('dashboard',{user:ssn});
 
 });
 router.post('/login',(req,res)=>{
@@ -95,7 +112,7 @@ router.post('/login',(req,res)=>{
             if(user){
                 
                 ssn=user;
-                res.render('dashboard',{user:user});
+                res.render('dashboard',{user:ssn});
             }
            
         }).catch(err=>console.log(err));
