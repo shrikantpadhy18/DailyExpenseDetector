@@ -1,6 +1,6 @@
 const express=require("express");
 const router=express();
-
+var nodemailer = require('nodemailer');
 var ssn ;
 //User model
 const User=require('../Models/User');
@@ -10,7 +10,7 @@ const bcrypt=require('bcryptjs')
 router.get('/login',(req,res)=>res.render("login"));
 //login
 router.get('/register',(req,res)=>res.render("register"));
-
+var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
 //handling request
 router.post('/register',(req,res)=>{
     const{name,email,password,password2}=req.body;
@@ -136,6 +136,37 @@ router.post('/Status',(req,res)=>{
     Dab.find({Month:searchinp,email:ssn.email}).then(arr=>{
         
         arg=arr;
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: 'prashantpadhy21@gmail.com',
+              pass: '21052003'
+            }
+          });
+          var st=" "
+          var ct=0
+          arg.forEach((data)=>{
+              ct+=data.PriceQuantity
+              st+=`Date is ${data.date}\n Month is ${months[data.Month-1]}\n ProductName is ${data.ProductName} \n Quantity Of Items Purchased is ${data.Quantity} \n Price_Per_Quantity is ${data.PriceQuantity}\n\n\n`
+          })
+          st+=`Total Expenditure in this month: ${months[searchinp-1]} is ${ct}`
+          var mailOptions = {
+            from: 'prashantpadhy21@gmail.com',
+            to: JSON.stringify(ssn.email),
+            subject: 'The Following Result Shows the Grocery Items shown to you In the website in your last visit',
+            text:st
+          };
+          
+          transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+              console.log(error);
+            } else {
+              console.log('Email sent: ' + info.response);
+            }
+          });
+
+
+
         console.log(arg);
         res.render("Status",{ssn:ssn,arg:arg});
     }).catch(err=>{
