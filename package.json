@@ -21,7 +21,7 @@
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
-  "author": "",
+  "author": "Shrikant Padhy",
   "license": "ISC",
   "repository": {
     "type": "git",
